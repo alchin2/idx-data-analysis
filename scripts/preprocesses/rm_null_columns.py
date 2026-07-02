@@ -17,11 +17,13 @@ COLUMNS_TO_DROP = [
     "BuyerAgencyCompensation",
     "BuyerAgencyCompensationType",
     "BuildingAreaTotal",
+    "WaterfrontYN",
+    "BasementYN"
 ]
 
 DATASETS = {
-    "listings": ("combined_listings.csv", "residential_filtered.csv"),
-    "sold": ("combined_sold.csv", "sold_filtered.csv"),
+    "listings": ("combined_listings.csv", "combined_listingsv2.csv"),
+    "sold": ("combined_sold.csv", "combined_soldv2.csv"),
 }
 
 
