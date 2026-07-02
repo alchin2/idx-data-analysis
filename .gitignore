@@ -1,5 +1,6 @@
 #environment
 .venv
+**/.DS_Store
 
 #data
 /data/raw/*
