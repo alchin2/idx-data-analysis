@@ -1,11 +1,11 @@
 # Preprocessing Scripts
 
-Scripts for cleaning and combining raw CRMLS CSV exports into analysis-ready datasets. All scripts filter to **residential properties only** and write output to `data/processed/`.
-
+Scripts for fetching, cleaning, and combining raw CRMLS CSV exports into analysis-ready datasets. 
 ## Directory Structure
 
 ```
 preprocesses/
+├── fetch_data.py   # Downloads raw CRMLS CSVs from the FTP server \
 ├── preprocess.py   # Main entry point — runs listings + sold in sequence
 ├── listing.py      # Standalone script for listings only
 ├── sold.py         # Standalone script for sold properties only
@@ -13,6 +13,26 @@ preprocesses/
 ```
 
 ## Usage
+
+### 1. Fetch raw data
+
+Fill in `.env` file with login and directories
+
+```bash
+cp .env.example .env
+```
+
+Download the raw CRMLS CSVs from the FTP server into `data/raw/`:
+
+
+```bash
+python fetch_data.py
+```
+
+This connects to the FTP server using credentials from a `.env` file and downloads
+every `.csv` whose name starts with `CRMLSListing` or `CRMLSSold`. 
+
+### 2. Preprocess
 
 Run both pipelines together:
 
