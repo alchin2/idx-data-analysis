@@ -1,7 +1,7 @@
 # Analysis Tools
 
 Exploratory analysis notebooks and shared plotting/summary helpers that run against
-the processed datasets in `data/processed/` (produced by `../preprocesses/`).
+the processed datasets in `data/processed/` (produced by `../preprocessing/`).
 
 ## Directory Structure
 
@@ -51,4 +51,4 @@ base_dir = Path.cwd().parent.parent
 data_path = base_dir / "data" / "processed"
 ```
 
-Run `../preprocesses/` first to generate the processed CSVs these notebooks read.
+Run `../preprocessing/` first to generate the processed CSVs these notebooks read.

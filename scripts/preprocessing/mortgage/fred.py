@@ -1,5 +1,9 @@
+from pathlib import Path
+
 import pandas as pd
 
+# scripts/preprocessing/mortgage/fred.py -> repo root
+RAW_DIR = Path(__file__).resolve().parents[3] / "data" / "raw"
 
 url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=MORTGAGE30US"
 df = pd.read_csv(url, parse_dates=['observation_date'])
@@ -14,4 +18,5 @@ mortgage_monthly = (
     .reset_index()
 )
 
-mortgage_monthly.to_csv('data/raw/mortgage_rates.csv', index=False)
+RAW_DIR.mkdir(parents=True, exist_ok=True)
+mortgage_monthly.to_csv(RAW_DIR / "mortgage_rates.csv", index=False)
