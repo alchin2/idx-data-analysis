@@ -1,7 +1,7 @@
 # Analysis Tools
 
 Exploratory analysis notebooks and shared plotting/summary helpers that run against
-the processed datasets in `data/processed/` (produced by `../preprocessing/`).
+the processed datasets in `data/processed/`
 
 ## Directory Structure
 
@@ -9,11 +9,11 @@ the processed datasets in `data/processed/` (produced by `../preprocessing/`).
 tools/
 ├── distribution_tool.ipynb   # Demo of the distribution helpers in util/
 ├── null_analysis.ipynb       # Per-column null rates + column-pruning report
-├── prices.ipynb              # (Old) Numerical review of price distributions
-├── questions.ipynb           # (Old)Ad-hoc exploratory questions against the data
-└── util/                     # Reusable helpers imported by the notebooks
+├── prices.ipynb              # (Archive) Numerical review of price distributions
+├── questions.ipynb           # (Archive) Ad-hoc exploratory questions against the data
+└── util/                     # Reusable helpers 
     ├── distribution.py        # distribution_summary + plot_distribution
-    └── formatters.py          # FixedOrderFormatter (matplotlib axis offsets)
+    └── formatters.py          # FixedOrderFormatter
 ```
 
 ## `util` package
@@ -50,5 +50,3 @@ from pathlib import Path
 base_dir = Path.cwd().parent.parent
 data_path = base_dir / "data" / "processed"
 ```
-
-Run `../preprocessing/` first to generate the processed CSVs these notebooks read.

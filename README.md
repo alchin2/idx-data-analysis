@@ -1,29 +1,7 @@
 # IDX Data Analysis
 
-Tooling to turn raw CRMLS IDX exports (residential listings and sold
-properties) into analysis-ready datasets, enrich them with mortgage-rate
+Tooling to turn raw CRMLS Data into analysis-ready datasets, enrich them with mortgage-rate
 context, and explore them in notebooks.
-
-## Pipeline
-
-```
-FTP (CRMLS CSVs)                 FRED (30-yr mortgage rate)
-      │                                    │
-      ▼                                    ▼
-data/raw/CRMLS*.csv               data/raw/mortgage_rates.csv
-      │                                    │
-      ▼ preprocess.py                      │ fred.py
-combined_<name>.csv                        │
-      │                                    │
-      ▼ null_analysis.ipynb                │
-combined_<name>_pruned.csv ────────────────┘
-      │                        merge.ipynb
-      ▼
-<name>_with_rates.csv  ──►  analysis notebooks (scripts/tools)
-```
-
-`<name>` is `listings` or `sold`. See `data/processed/README.txt` for the
-dataset naming convention.
 
 ## Layout
 

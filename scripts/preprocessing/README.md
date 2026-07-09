@@ -45,9 +45,7 @@ python mortgage/fred.py
 Run both pipelines together, or target one:
 
 ```bash
-python preprocess.py           # both listings and sold
-python preprocess.py listings  # listings only
-python preprocess.py sold      # sold only
+python preprocess.py          
 ```
 
 ## Input / Output
@@ -68,13 +66,6 @@ Raw CSVs should be placed in `data/raw/` before running.
 5. Write the result to `data/processed/`
 
 The scripts print a summary of total vs. residential record counts on completion.
-
-## Next stages
-
-These scripts produce the stage-1 `combined_*.csv` files. Column pruning
-(`scripts/tools/null_analysis.ipynb`) and the mortgage-rate merge
-(`mortgage/merge.ipynb`) run afterward. See `data/processed/README.txt` for the
-full naming convention.
 
 ## Dependencies
 
