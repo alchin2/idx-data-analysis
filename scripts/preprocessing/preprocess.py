@@ -33,7 +33,6 @@ def run_pipeline(name):
 
 
 def main():
-    # Accept an optional target: listings | sold | all (default: all)
     target = sys.argv[1] if len(sys.argv) > 1 else "all"
 
     print("=" * 60)
