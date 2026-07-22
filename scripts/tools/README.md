@@ -1,20 +1,21 @@
 # Analysis Tools
 
-Exploratory analysis notebooks and shared plotting/summary helpers that run against
-the processed datasets in `data/processed/`
+Shared plotting/summary helpers and a demo notebook that run against the processed
+datasets in `data/processed/`.
 
 ## Directory Structure
 
 ```
 tools/
 ├── distribution_tool.ipynb   # Demo of the distribution helpers in util/
-├── null_analysis.ipynb       # Per-column null rates + column-pruning report
-├── prices.ipynb              # (Archive) Numerical review of price distributions
-├── questions.ipynb           # (Archive) Ad-hoc exploratory questions against the data
-└── util/                     # Reusable helpers 
+└── util/                     # Reusable helpers
     ├── distribution.py        # distribution_summary + plot_distribution
     └── formatters.py          # FixedOrderFormatter
 ```
+
+> The pipeline notebooks `null_analysis.ipynb` and `validation.ipynb` live at the
+> `scripts/` root; archived ad-hoc notebooks (`prices.ipynb`, `questions.ipynb`)
+> live in `scripts/extra/`.
 
 ## `util` package
 

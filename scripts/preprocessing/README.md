@@ -45,7 +45,9 @@ python mortgage/fred.py
 Run both pipelines together, or target one:
 
 ```bash
-python preprocess.py          
+python preprocess.py            # all (default)
+python preprocess.py listings   # CRMLSListing*.csv only
+python preprocess.py sold       # CRMLSSold*.csv only
 ```
 
 ## Input / Output

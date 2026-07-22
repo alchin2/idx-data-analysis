@@ -11,17 +11,24 @@ idx-data-analysis/
 │   ├── raw/        # source CSVs from CRMLS + FRED (gitignored)
 │   └── processed/  # pipeline outputs (gitignored; see README.txt)
 └── scripts/
+    ├── null_analysis.ipynb   # prune high-null columns -> combined_<name>_pruned.csv
+    ├── validation.ipynb      # type/timeline/geographic checks -> <name>_validated.csv
     ├── preprocessing/   # fetch, combine, filter raw data
     │   ├── fetch_data.py    # download CRMLS CSVs from FTP
     │   ├── preprocess.py    # combine + residential filter -> combined_<name>.csv
     │   ├── utils.py         # shared path/CSV helpers
     │   └── mortgage/        # mortgage-rate fetch + merge
     │       ├── fred.py          # download monthly 30-yr rates from FRED
-    │       └── merge.ipynb      # join rates onto pruned datasets
-    └── tools/           # exploratory analysis notebooks + util package
+    │       └── merge.ipynb      # join rates onto pruned datasets -> <name>.csv
+    ├── tools/           # distribution helpers + util package
+    │   ├── distribution_tool.ipynb   # demo of the util/ helpers
+    │   └── util/                     # reusable plotting/summary helpers
+    └── extra/           # archived ad-hoc exploratory notebooks
+        ├── prices.ipynb
+        └── questions.ipynb
 ```
 
-Each subdirectory has its own README with details.
+`preprocessing/` and `tools/` each have their own README with details.
 
 ## Setup
 
@@ -41,7 +48,9 @@ python scripts/preprocessing/mortgage/fred.py
 # 2. combine + filter (all, or: listings | sold)
 python scripts/preprocessing/preprocess.py
 
-# 3. prune high-null columns, then merge rates
-#    run scripts/tools/null_analysis.ipynb, then
-#    scripts/preprocessing/mortgage/merge.ipynb
+# 3. prune high-null columns, merge rates, then validate
+#    run these notebooks in order:
+#      scripts/null_analysis.ipynb              -> combined_<name>_pruned.csv
+#      scripts/preprocessing/mortgage/merge.ipynb -> <name>.csv
+#      scripts/validation.ipynb                 -> <name>_validated.csv
 ```
