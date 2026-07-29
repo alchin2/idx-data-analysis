@@ -1,15 +1,18 @@
 Processed datasets
 ==================
 
-Files are named <name>_<stage>, where <name> is "listings" or "sold".
-The CSVs are gitignored; only this README is tracked.
+Files are named <index>_<name>.csv, where <index> is the pipeline stage
+(0-4) and <name> is "listings" or "sold". The CSVs are gitignored; only
+this README is tracked.
 
-  combined_<name>.csv          concatenated raw + residential filter (preprocess.py)
-  combined_<name>_pruned.csv   high-null columns dropped (null_analysis.ipynb)
-  <name>.csv                   merged with monthly mortgage rates (merge.ipynb)
-  <name>_validated.csv         type/timeline/geographic checks applied (validation.ipynb)
+  0_<name>.csv   concatenated raw + residential filter (preprocess.py)
+  1_<name>.csv   high-null columns dropped (null_analysis.ipynb)
+  2_<name>.csv   merged with monthly mortgage rates (merge.ipynb)
+  3_<name>.csv   type/timeline/geographic checks applied (validation.ipynb)
+  4_<name>.csv   joined with school district boundaries (school_districting.ipynb)
 
-Note: the validated listings file is named listing_validated.csv (singular).
+Each stage reads the previous stage's file and deletes it after writing its
+own output, so only the highest-numbered file per dataset should exist on
+disk at a time.
 
-Each stage is generated from the one before it (see the scripts/ READMEs).
 Don't hand-edit; regenerate. Don't use ad-hoc tags like "v2".

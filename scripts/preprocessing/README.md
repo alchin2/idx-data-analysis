@@ -54,8 +54,8 @@ python preprocess.py sold       # CRMLSSold*.csv only
 
 | Target | Input (filename filter) | Output file |
 |---|---|---|
-| `listings` | `CRMLSListing*.csv` | `data/processed/combined_listings.csv` |
-| `sold` | `CRMLSSold*.csv` | `data/processed/combined_sold.csv` |
+| `listings` | `CRMLSListing*.csv` | `data/processed/0_listings.csv` |
+| `sold` | `CRMLSSold*.csv` | `data/processed/0_sold.csv` |
 
 Raw CSVs should be placed in `data/raw/` before running.
 

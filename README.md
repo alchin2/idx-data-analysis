@@ -11,15 +11,16 @@ idx-data-analysis/
 │   ├── raw/        # source CSVs from CRMLS + FRED (gitignored)
 │   └── processed/  # pipeline outputs (gitignored; see README.txt)
 └── scripts/
-    ├── null_analysis.ipynb   # prune high-null columns -> combined_<name>_pruned.csv
-    ├── validation.ipynb      # type/timeline/geographic checks -> <name>_validated.csv
+    ├── null_analysis.ipynb        # prune high-null columns -> 1_<name>.csv
+    ├── validation.ipynb           # type/timeline/geographic checks -> 3_<name>.csv
+    ├── school_districting.ipynb   # join school district boundaries -> 4_<name>.csv
     ├── preprocessing/   # fetch, combine, filter raw data
     │   ├── fetch_data.py    # download CRMLS CSVs from FTP
-    │   ├── preprocess.py    # combine + residential filter -> combined_<name>.csv
+    │   ├── preprocess.py    # combine + residential filter -> 0_<name>.csv
     │   ├── utils.py         # shared path/CSV helpers
     │   └── mortgage/        # mortgage-rate fetch + merge
     │       ├── fred.py          # download monthly 30-yr rates from FRED
-    │       └── merge.ipynb      # join rates onto pruned datasets -> <name>.csv
+    │       └── merge.ipynb      # join rates onto pruned datasets -> 2_<name>.csv
     ├── tools/           # distribution helpers + util package
     │   ├── distribution_tool.ipynb   # demo of the util/ helpers
     │   └── util/                     # reusable plotting/summary helpers
@@ -28,7 +29,8 @@ idx-data-analysis/
         └── questions.ipynb
 ```
 
-`preprocessing/` and `tools/` each have their own README with details.
+`scripts/` has its own README with the full pipeline breakdown; `preprocessing/` and
+`tools/` each have their own README with details.
 
 ## Setup
 
@@ -48,9 +50,10 @@ python scripts/preprocessing/mortgage/fred.py
 # 2. combine + filter (all, or: listings | sold)
 python scripts/preprocessing/preprocess.py
 
-# 3. prune high-null columns, merge rates, then validate
+# 3. prune high-null columns, merge rates, validate, then join school districts
 #    run these notebooks in order:
-#      scripts/null_analysis.ipynb              -> combined_<name>_pruned.csv
-#      scripts/preprocessing/mortgage/merge.ipynb -> <name>.csv
-#      scripts/validation.ipynb                 -> <name>_validated.csv
+#      scripts/null_analysis.ipynb                -> 1_<name>.csv
+#      scripts/preprocessing/mortgage/merge.ipynb -> 2_<name>.csv
+#      scripts/validation.ipynb                   -> 3_<name>.csv
+#      scripts/school_districting.ipynb           -> 4_<name>.csv
 ```

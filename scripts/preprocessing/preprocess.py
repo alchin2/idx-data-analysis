@@ -4,8 +4,8 @@ from utils import get_directories, process_listings
 
 # name -> (filename filter key, output file)
 PIPELINES = {
-    "listings": ("CRMLSListing", "combined_listings.csv"),
-    "sold": ("CRMLSSold", "combined_sold.csv"),
+    "listings": ("CRMLSListing", "0_listings.csv"),
+    "sold": ("CRMLSSold", "0_sold.csv"),
 }
 
 
