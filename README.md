@@ -14,6 +14,7 @@ idx-data-analysis/
     ├── null_analysis.ipynb        # prune high-null columns -> 1_<name>.csv
     ├── validation.ipynb           # type/timeline/geographic checks -> 3_<name>.csv
     ├── school_districting.ipynb   # join school district boundaries -> 4_<name>.csv
+    ├── features.py                 # Tableau market-indicator columns -> <name>_features.csv
     ├── preprocessing/   # fetch, combine, filter raw data
     │   ├── fetch_data.py    # download CRMLS CSVs from FTP
     │   ├── preprocess.py    # combine + residential filter -> 0_<name>.csv
@@ -56,4 +57,7 @@ python scripts/preprocessing/preprocess.py
 #      scripts/preprocessing/mortgage/merge.ipynb -> 2_<name>.csv
 #      scripts/validation.ipynb                   -> 3_<name>.csv
 #      scripts/school_districting.ipynb           -> 4_<name>.csv
+
+# 4. derive Tableau feature columns
+python scripts/features.py                       # -> <name>_features.csv
 ```
