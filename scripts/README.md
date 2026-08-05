@@ -70,6 +70,13 @@ written, so mid-pipeline state never lingers under a stale name.
 
 ## Running it
 
+Run everything end to end with `scripts/run_pipeline.sh` (add `--skip-fetch` to
+start from stage 0 using existing `data/raw/` files instead of re-fetching).
+It shells out to `jupyter nbconvert --execute --inplace` for the notebook
+stages, so `jupyter`/`nbconvert` must be installed.
+
+Or run each stage manually:
+
 ```bash
 # fetch raw data
 python scripts/preprocessing/fetch_data.py
