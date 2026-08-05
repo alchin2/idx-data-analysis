@@ -19,7 +19,8 @@ transforms it, writes a new numbered file, and deletes its input — so
 | 2 | Merge mortgage rates | `preprocessing/mortgage/merge.ipynb` | `data/processed/1_<name>.csv` | `data/processed/2_<name>.csv` | yes, `1_<name>.csv` |
 | 3 | Type/timeline/geo validation | `validation.ipynb` | `data/processed/2_<name>.csv` | `data/processed/3_<name>.csv` | yes, `2_<name>.csv` |
 | 4 | School district join | `school_districting.ipynb` | `data/processed/3_<name>.csv`, `data/raw/DistrictAreas.geojson` | `data/processed/4_<name>.csv` | yes, `3_<name>.csv` |
-| 5 | Feature engineering | `features.py` | TBD (would read `4_<name>.csv`) | TBD (would write `5_<name>.csv`) | currently an empty stub, not yet implemented |
+| 5 | Feature engineering | `features.py` | `data/processed/4_<name>.csv` | `data/processed/<name>_features.csv` | no, `4_<name>.csv` is left in place |
+| 6 | IQR outlier filter | `iqr_filter.py` | `data/processed/<name>_features.csv` | `data/processed/<name>_features.csv` (filtered in place) | n/a, overwrites its own input |
 
 ## Naming, stage by stage
 
@@ -41,9 +42,15 @@ CRMLSListing<YYYYMM>.csv, CRMLSSold<YYYYMM>.csv     (data/raw/, one file per mon
         │  school_districting.ipynb — spatial join against DistrictAreas.geojson
         ▼
 4_listings.csv, 4_sold.csv
-        │  features.py — not yet implemented
+        │  features.py — adds price/days-on-market/date/timeline columns
+        │                (only where the source columns exist per dataset)
         ▼
-5_listings.csv, 5_sold.csv   (planned)
+listings_features.csv, sold_features.csv
+        │  iqr_filter.py — drops outliers on price_per_sqft, ClosePrice,
+        │                  price_ratio, days_on_market (whichever are present),
+        │                  filtered sequentially, overwrites the same file
+        ▼
+listings_features.csv, sold_features.csv   (filtered in place)
 ```
 
 `data/processed/README.txt` documents the same stages from the data side.
@@ -59,7 +66,7 @@ written, so mid-pipeline state never lingers under a stale name.
 - `preprocessing/` — stages 0–2 (fetch, combine/filter, mortgage merge). See its own README.
 - `tools/` — `util/` plotting & summary helpers (`distribution_summary`, `plot_distribution`, `FixedOrderFormatter`) plus a demo notebook. Not part of the data pipeline itself. See its own README.
 - `extra/` — archived ad-hoc exploratory notebooks (`prices.ipynb`, `questions.ipynb`), not part of the pipeline.
-- `null_analysis.ipynb`, `validation.ipynb`, `school_districting.ipynb`, `features.py` — pipeline stages 1, 3, 4, 5, at the `scripts/` root.
+- `null_analysis.ipynb`, `validation.ipynb`, `school_districting.ipynb`, `features.py`, `iqr_filter.py` — pipeline stages 1, 3, 4, 5, 6, at the `scripts/` root.
 
 ## Running it
 
@@ -76,4 +83,10 @@ python scripts/preprocessing/preprocess.py
 #   scripts/preprocessing/mortgage/merge.ipynb
 #   scripts/validation.ipynb
 #   scripts/school_districting.ipynb
+
+# stage 5: feature engineering
+python scripts/features.py
+
+# stage 6: IQR outlier filter (overwrites stage 5 output in place)
+python scripts/iqr_filter.py
 ```
