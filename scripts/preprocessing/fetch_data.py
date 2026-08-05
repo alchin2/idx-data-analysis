@@ -1,4 +1,5 @@
 from ftplib import FTP
+from pathlib import Path
 import os
 import dotenv
 
@@ -8,7 +9,8 @@ HOST = os.getenv('FTP_HOST', "")
 USER = os.getenv('FTP_USER', "")
 PASS = os.getenv('FTP_PASS', "")
 
-LOCAL_DIR = os.getenv('LOCAL_DIR', 'data/raw/')
+DEFAULT_LOCAL_DIR = Path(__file__).resolve().parents[2] / "data" / "raw"
+LOCAL_DIR = os.getenv('LOCAL_DIR', str(DEFAULT_LOCAL_DIR))
 REMOTE_DIR = os.getenv('REMOTE_DIR', '/csv')
 
 PREFIX = {
