@@ -3,7 +3,7 @@
 **/.DS_Store
 
 #data (ignore the bulk CSVs but keep the folder docs tracked)
-/data/raw/*
+/data/raw/
 !/data/raw/README.txt
 /data/processed/*
 !/data/processed/README.md
@@ -13,3 +13,6 @@ __pycache__/
 
 #secrets
 .env
+
+# converted notebooks
+*.nbconvert.ipynb
