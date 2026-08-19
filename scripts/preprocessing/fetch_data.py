@@ -9,8 +9,15 @@ HOST = os.getenv('FTP_HOST', "")
 USER = os.getenv('FTP_USER', "")
 PASS = os.getenv('FTP_PASS', "")
 
-DEFAULT_LOCAL_DIR = Path(__file__).resolve().parents[2] / "data" / "raw"
-LOCAL_DIR = os.getenv('LOCAL_DIR', str(DEFAULT_LOCAL_DIR))
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_LOCAL_DIR = REPO_ROOT / "data" / "raw"
+
+# Resolve LOCAL_DIR against the repo root (not the caller's cwd) so a relative
+# path in .env (e.g. "data/raw/") always lands in the real repo data/raw folder,
+# even when the pipeline is launched from scripts/.
+LOCAL_DIR = Path(os.getenv('LOCAL_DIR') or DEFAULT_LOCAL_DIR)
+if not LOCAL_DIR.is_absolute():
+    LOCAL_DIR = REPO_ROOT / LOCAL_DIR
 REMOTE_DIR = os.getenv('REMOTE_DIR', '/csv')
 
 PREFIX = {
