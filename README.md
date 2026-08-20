@@ -1,63 +1,116 @@
 # IDX Data Analysis
 
-Tooling to turn raw CRMLS Data into analysis-ready datasets, enrich them with mortgage-rate
-context, and explore them in notebooks.
+A reproducible pipeline for turning CRMLS real-estate exports into analysis-ready
+listing and sold datasets. The project combines monthly CRMLS CSVs with FRED
+30-year mortgage rates, validates and enriches the data, and produces feature
+tables for Tableau and exploratory analysis.
 
-## Layout
+## What it produces
 
-```
-idx-data-analysis/
+- Residential listing and sold datasets for downstream analysis.
+- Monthly mortgage-rate context from FRED's `MORTGAGE30US` series.
+- Timeline, price, geographic, and school-district features.
+- Tableau workbooks in [`workbooks/`](workbooks/).
+
+Raw and generated CSVs are intentionally excluded from Git. See
+[`data/processed/README.md`](data/processed/README.md) for the output contract.
+
+## Project layout
+
+```text
+.
 ├── data/
-│   ├── raw/        # source CSVs from CRMLS + FRED (gitignored)
-│   └── processed/  # pipeline outputs (gitignored; see README.txt)
-└── scripts/
-    ├── null_analysis.ipynb        # prune high-null columns -> 1_<name>.csv
-    ├── validation.ipynb           # type/timeline/geographic checks -> 3_<name>.csv
-    ├── school_districting.ipynb   # join school district boundaries -> 4_<name>.csv
-    ├── features.py                 # Tableau market-indicator columns -> <name>_features.csv
-    ├── preprocessing/   # fetch, combine, filter raw data
-    │   ├── fetch_data.py    # download CRMLS CSVs from FTP
-    │   ├── preprocess.py    # combine + residential filter -> 0_<name>.csv
-    │   ├── utils.py         # shared path/CSV helpers
-    │   └── mortgage/        # mortgage-rate fetch + merge
-    │       ├── fred.py          # download monthly 30-yr rates from FRED
-    │       └── merge.ipynb      # join rates onto pruned datasets -> 2_<name>.csv
-    ├── tools/           # distribution helpers + util package
-    │   ├── distribution_tool.ipynb   # demo of the util/ helpers
-    │   └── util/                     # reusable plotting/summary helpers
-    └── extra/           # archived ad-hoc exploratory notebooks
-        ├── prices.ipynb
-        └── questions.ipynb
+│   ├── raw/                 # CRMLS exports, FRED rates, and DistrictAreas.geojson
+│   └── processed/           # generated pipeline outputs
+├── scripts/
+│   ├── run_pipeline.sh      # execute the complete workflow
+│   ├── preprocessing/       # FTP/FRED downloads and stage 0–2 processing
+│   ├── null_analysis.ipynb  # stage 1: remove high-null columns
+│   ├── validation.ipynb     # stage 3: clean and validate records
+│   ├── school_districting.ipynb # stage 4: spatial school-district join
+│   ├── features.py          # stage 5: derived analysis features
+│   ├── iqr_filter.py        # stage 6: sequential IQR outlier filtering
+│   ├── tools/               # reusable distribution-analysis helpers
+│   └── extra/               # archived exploratory notebooks
+└── workbooks/               # Tableau workbooks
 ```
 
-`scripts/` has its own README with the full pipeline breakdown; `preprocessing/` and
-`tools/` each have their own README with details.
+More detailed documentation is available in [`scripts/README.md`](scripts/README.md),
+[`scripts/preprocessing/README.md`](scripts/preprocessing/README.md), and
+[`scripts/tools/README.md`](scripts/tools/README.md).
 
 ## Setup
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env   # then fill in FTP credentials
 ```
 
-## Quickstart
+To execute notebook stages, also install Jupyter and the notebook-only packages:
 
 ```bash
-# 1. fetch raw data
+pip install jupyter geopandas folium
+```
+
+## Configure CRMLS access
+
+Copy the template and fill in the FTP values:
+
+```bash
+cp .env.example .env
+```
+
+The downloader reads `FTP_HOST`, `FTP_USER`, `FTP_PASS`, `LOCAL_DIR`, and
+`REMOTE_DIR`. `LOCAL_DIR` defaults to `data/raw/`; `REMOTE_DIR` defaults to
+`/csv`. Keep `.env` private.
+
+## Run the pipeline
+
+From the repository root:
+
+```bash
+scripts/run_pipeline.sh
+```
+
+Use existing files in `data/raw/` and skip both download steps with:
+
+```bash
+scripts/run_pipeline.sh --skip-fetch
+```
+
+The complete run executes the stages in order:
+
+1. Download CRMLS listing/sold exports and monthly FRED rates.
+2. Combine monthly exports and retain residential records.
+3. Remove columns with more than 50% missing values.
+4. Merge monthly mortgage rates.
+5. Apply type, timeline, and California geographic checks.
+6. Join school-district attributes using `data/raw/DistrictAreas.geojson`.
+7. Add derived features and filter IQR outliers.
+
+The pipeline runs from `scripts/`, so paths and notebook imports work regardless
+of the directory from which the shell script is launched.
+
+## Run individual stages
+
+```bash
 python scripts/preprocessing/fetch_data.py
 python scripts/preprocessing/mortgage/fred.py
-
-# 2. combine + filter (all, or: listings | sold)
-python scripts/preprocessing/preprocess.py
-
-# 3. prune high-null columns, merge rates, validate, then join school districts
-#    run these notebooks in order:
-#      scripts/null_analysis.ipynb                -> 1_<name>.csv
-#      scripts/preprocessing/mortgage/merge.ipynb -> 2_<name>.csv
-#      scripts/validation.ipynb                   -> 3_<name>.csv
-#      scripts/school_districting.ipynb           -> 4_<name>.csv
-
-# 4. derive Tableau feature columns
-python scripts/features.py                       # -> <name>_features.csv
+python scripts/preprocessing/preprocess.py             # listings and sold
+python scripts/preprocessing/preprocess.py listings     # listings only
+python scripts/preprocessing/preprocess.py sold        # sold only
+python scripts/features.py
+python scripts/iqr_filter.py
 ```
+
+Stages 1–4 are notebooks and must be run in the order documented in
+[`scripts/README.md`](scripts/README.md). The notebooks, `features.py`, and
+`iqr_filter.py` modify or remove intermediate outputs, so keep a copy of any
+dataset that must be preserved.
+
+## Analysis helpers
+
+The reusable plotting and summary functions in `scripts/tools/util/` are
+documented in [`scripts/tools/README.md`](scripts/tools/README.md). Open
+`distribution_tool.ipynb` for a working example.
