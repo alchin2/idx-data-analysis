@@ -70,10 +70,12 @@ def main():
 
         output = PROCESSED_DIR / f"{name}_features.csv"
         df.to_csv(output, index=False)
+        path.unlink()
 
         added = [c for c in df.columns if c not in before]
         print(f"[{name}] {len(df):,} rows x {df.shape[1]} cols, added: {added or 'none'}")
         print(f"[{name}] wrote {output}")
+        print(f"[{name}] removed {path}")
 
 
 if __name__ == "__main__":
